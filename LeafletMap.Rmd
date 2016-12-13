@@ -1,0 +1,110 @@
+---
+title: "Leaflet Map"
+author: "Jeff Ball"
+date: "December 12, 2016"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Leaflet interactive map
+
+This map was created to look at some restaurants nearby.  The map identifies local restaurants and also shows the relative cost and recent rating on the Yelp! website.  Information was collected on 12/6/2016.  The radius of the marker is the user rating (ranging from 1.0 to 5.0) and the color of the marker is the relative cost (low, medium, or high).
+
+```{r PopData,echo=FALSE}
+	RestName <- c("BJ's Restaurant and Brewhouse",
+		"Chili's Grill & Bar",
+		"TGI Fridays",
+		"Kirin Japanese Seafood & Sushi Buffet",
+		"Romano's Macaroni Grill",
+		"Starbucks",
+		"Chipotle Mexican Grill",
+		"Raising Cane's Chicken Fingers",
+		"Olive Garden",
+		"Panda Express",
+		"Becks Prime",
+		"Baskin Robbins",
+		"Fuddruckers",
+		"McAlister's Deli")
+
+	Rating <- c(4.0,3.7,3.3,
+		4.1,3.3,3.9,
+		3.9,4.0,3.8,
+		2.6,4.0,4.1,
+		3.9,3.8)
+
+	Cost <- c(2,1,2,1,2,2,1,1,2,1,1,2,2,2)
+
+	Site <- c("bjsrestaurants.com",
+		"chilis.com",
+		"tgifridays.com",
+		"kirinjapaneseseafood.com",
+		"macaronigrill.com",
+		"starbucks.com",
+		"chipotle.com",
+		"raisingcanes.com",
+		"olivegarden.com",
+		"pandaexpress.com",
+		"becksprime.com",
+		"baskinrobbins.com",
+		"fuddruckers.com",
+		"mcalistersdeli.com")
+
+	Lat <- c(29.962410,
+		29.962871,
+		29.963633,
+		29.963146,
+		29.962787,
+		29.964210,
+		29.964283,
+		29.963849,
+		29.964069,
+		29.964947,
+		29.965035,
+		29.965316,
+		29.964424,
+		29.965696)
+
+	Lng <- c(-95.543991,
+		-95.543331,
+		-95.545090,
+		-95.543032,
+		-95.542715,
+		-95.543766,
+		-95.543623,
+		-95.541924,
+		-95.541504,
+		-95.542616,
+		-95.542453,
+		-95.541820,
+		-95.540530,
+		-95.540936)
+	
+	Popup <- paste("<a href='",Site,"'>",RestName,"</a>",sep="")
+
+	df <- data.frame(RestName,Rating,Cost,Site,Lat,Lng,Popup)
+	df$RestName <- as.character(df$RestName)
+	df$Site <- as.character(df$Site)
+	df$Popup <- as.character(df$Popup)
+
+	LegendColors <- c("green","blue","red")
+```
+
+```{r CreateMap, echo=FALSE}
+	library(leaflet)
+
+	RestMap <- leaflet()
+	RestMap <- addTiles(RestMap)
+	RestMap <- addCircleMarkers(RestMap,
+		lat=df$Lat,
+		lng=df$Lng,
+		popup=df$Popup,
+		radius=df$Rating*10,
+		color=LegendColors[df$Cost])
+	RestMap <- addLegend(RestMap,
+		labels=c("$","$$","$$$"),
+		colors=LegendColors)
+	RestMap
+```
