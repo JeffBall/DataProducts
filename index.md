@@ -37,7 +37,7 @@ are as follows:
 * a checkbox to show/hide the sphere surface area
 
 The tool can be found at the following address:
-http://jeffball.shinyapps.io/week4
+https://jeffball.shinyapps.io/week4/
 
 ---
 
